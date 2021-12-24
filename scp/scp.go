@@ -22,7 +22,7 @@ func CopyFile(ip string, localfile string, remotefile string) error {
 	}
 	defer scpClient.Close()
 	err2 := scpClient.CopyFileFromRemote(localfile, remotefile, &scp.FileTransferOption{})
-	if err != nil {
+	if err2 != nil {
 		return err2
 	} else {
 		return nil
@@ -44,9 +44,9 @@ func CopyFolder(ip string, localfolder string, remotefolder string) error {
 		return err
 	}
 	defer scpClient.Close()
-	err := scpClient.CopyDirFromRemote(localfolder, remotefolder, &scp.DirTransferOption{})
-	if err != nil {
-		return err
+	err2 := scpClient.CopyDirFromRemote(localfolder, remotefolder, &scp.DirTransferOption{})
+	if err2 != nil {
+		return err2
 	} else {
 		return nil
 	}
