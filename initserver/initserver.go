@@ -41,6 +41,7 @@ type StatusMemory struct {
 	NumGC      uint32    `json:"NumGC"`
 }
 type ResInitServer struct {
+	Encontrado bool    `json:"Consulname"`
 	Consulname string  `json:"Consulname"`
 	Consulhost string  `json:"Consulhost"`
 	AutoCache  bool    `json:"AutoCache"` // 0 AUTOMATICO - 1 LISTA CACHE
