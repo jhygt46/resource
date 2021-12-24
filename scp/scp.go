@@ -21,9 +21,9 @@ func CopyFile(ip string, localfile string, remotefile string) error {
 		return err
 	}
 	defer scpClient.Close()
-	err := scpClient.CopyFileFromRemote(localfile, remotefile, &scp.FileTransferOption{})
+	err2 := scpClient.CopyFileFromRemote(localfile, remotefile, &scp.FileTransferOption{})
 	if err != nil {
-		return err
+		return err2
 	} else {
 		return nil
 	}
