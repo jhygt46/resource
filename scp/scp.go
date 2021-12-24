@@ -12,7 +12,7 @@ func CopyFile(ip string, localfile string, remotefile string) error {
 	if err != nil {
 		return err
 	}
-	sshConf, err := scp.NewSSHConfigFromPrivateKey("root", privPEM, "buenanelson")
+	sshConf, err := scp.NewSSHConfigFromPrivateKey("root", privPEM)
 	if err != nil {
 		return err
 	}
