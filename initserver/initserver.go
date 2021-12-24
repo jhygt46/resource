@@ -81,7 +81,6 @@ func Init(url string, post ReqInitServer) (ResInitServer, error) {
 	} else {
 		return resp, errors.New("Request Error")
 	}
-
 }
 
 type ReqStatus struct {
@@ -165,7 +164,6 @@ func GetMemoryPonderacion(mem []StatusMemory) int8 {
 		}
 	*/
 	return 32
-
 }
 func GetCpuPonderacion(cpu []StatusCpu) int8 {
 	/*
@@ -175,7 +173,6 @@ func GetCpuPonderacion(cpu []StatusCpu) int8 {
 		}
 	*/
 	return 32
-
 }
 func DirSize(path string) (float64, error) {
 	var size int64
