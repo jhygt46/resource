@@ -192,6 +192,12 @@ func DirSize(path string) (float64, error) {
 func PrintMemUsage() StatusMemory {
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
+
+	u, err := json.Marshal(m)
+	if err == nil {
+		fmt.Println(string(u))
+	}
+
 	StatusMemory := StatusMemory{}
 	StatusMemory.Fecha = time.Now()
 	StatusMemory.Alloc = BToMb(m.Alloc)
