@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"resource/utils"
 	"runtime"
-	"strconv"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -164,9 +163,7 @@ func GetFiltroByteContent(db *sql.DB, id int64) ([]byte, error) {
 }
 func GetFiltroStringContent(db *sql.DB, id int64) (string, error) {
 
-	dbn, ids := GetDbbyId(id)
-
-	rows, err := db.Query("SELECT filtro FROM "+dbn+"filtros WHERE id=?", ids)
+	rows, err := db.Query("SELECT filtro FROM filtros WHERE id=?", id)
 	if err != nil {
 		return "", err
 	}
@@ -179,13 +176,4 @@ func GetFiltroStringContent(db *sql.DB, id int64) (string, error) {
 	}
 	defer rows.Close()
 	return filtro, nil
-}
-func GetDbbyId(id int64) (string, int64) {
-	x := id / 1000000
-	y := id % 1000000
-	if x > 0 {
-		return "db" + strconv.FormatInt(x, 10) + ".", y
-	} else {
-		return "", y
-	}
 }
