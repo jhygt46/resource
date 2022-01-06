@@ -1,10 +1,14 @@
 package utils
 
 import (
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"math"
+	"math/big"
 	"os"
+	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/valyala/fasthttp"
@@ -60,6 +64,10 @@ func IndexOf(arr []int32, candidate int32) int32 {
 	}
 	return -1
 }
+func Random(max int64) int64 {
+	n, _ := rand.Int(rand.Reader, big.NewInt(max-1))
+	return n.Int64() + 1
+}
 
 // AWS METADATA //
 func GetInstanceMeta(meta string) string {
@@ -80,3 +88,47 @@ func GetInstanceMeta(meta string) string {
 }
 
 // AWS METADATA //
+
+func escribir_file(path string, numb int) {
+	d1 := []byte("")
+	c := 0
+
+	aux := numb / 100
+
+	now := time.Now()
+	for n := 0; n < aux; n++ {
+		folder := getFolder64(int64(n * 100))
+		newpath := filepath.Join(path, folder)
+		err := os.MkdirAll(newpath, os.ModePerm)
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("FOLDER ERROR: ", err)
+		}
+		for i := 0; i < 100; i++ {
+			err := os.WriteFile(path+"/"+folder+"/"+strconv.Itoa(i), d1, 0644)
+			if err != nil {
+				fmt.Println(err)
+			}
+			c++
+		}
+	}
+	elapsed := time.Since(now)
+	fmt.Printf("WRITES FILES %v [%s] c/u total %v\n", c, Time_cu(elapsed, c), elapsed)
+}
+func divmod(numerator, denominator int64) (quotient, remainder int64) {
+	quotient = numerator / denominator
+	remainder = numerator % denominator
+	return
+}
+func getFolder64(num int64) string {
+	c1, n1 := divmod(num, 1000000)
+	c2, n2 := divmod(n1, 10000)
+	c3, _ := divmod(n2, 100)
+	return strconv.FormatInt(c1, 10) + "/" + strconv.FormatInt(c2, 10) + "/" + strconv.FormatInt(c3, 10)
+}
+func getFolderFile64(num int64) string {
+	c1, n1 := divmod(num, 1000000)
+	c2, n2 := divmod(n1, 10000)
+	c3, c4 := divmod(n2, 100)
+	return strconv.FormatInt(c1, 10) + "/" + strconv.FormatInt(c2, 10) + "/" + strconv.FormatInt(c3, 10) + "/" + strconv.FormatInt(c4, 10)
+}
