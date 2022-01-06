@@ -147,7 +147,7 @@ func FiltroBytesInit(db *sql.DB, filtro Filtro, total int64) {
 	}
 }
 func GetFiltroByteContent(db *sql.DB, id int64) ([]byte, error) {
-	rows, err := db.Query("SELECT filtro FROM db1.filtros WHERE id=?", id)
+	rows, err := db.Query("SELECT filtro FROM db2.filtros WHERE id=?", id)
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +162,7 @@ func GetFiltroByteContent(db *sql.DB, id int64) ([]byte, error) {
 	return filtro, nil
 }
 func GetFiltroStringContent(db *sql.DB, id int64) (string, error) {
-	rows, err := db.Query("SELECT filtro FROM db1.filtros WHERE id=?", id)
+	rows, err := db.Query("SELECT filtro FROM db2.filtros WHERE id=?", id)
 	if err != nil {
 		return "", err
 	}
