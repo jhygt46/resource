@@ -163,7 +163,7 @@ func GetFiltroByteContent(db *sql.DB, id int64) ([]byte, error) {
 }
 func GetFiltroStringContent(db *sql.DB, id int64) (string, error) {
 
-	rows, err := db.Query("SELECT filtro FROM db1.filtros WHERE id=?", id)
+	rows, err := db.Query("SELECT filtro FROM filtros WHERE id=?", id)
 	if err != nil {
 		return "", err
 	}
