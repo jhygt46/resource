@@ -164,7 +164,9 @@ func GetFiltroByteContent(db *sql.DB, id int64) ([]byte, error) {
 }
 func GetFiltroStringContent(db *sql.DB, id int64) (string, error) {
 
-	rows, err := db.Query("SELECT filtro FROM "+GetDbbyId(id)+"filtros WHERE id=?", id)
+	dbn, ids := GetDbbyId(id)
+
+	rows, err := db.Query("SELECT filtro FROM "+dbn+"filtros WHERE id=?", ids)
 	if err != nil {
 		return "", err
 	}
@@ -178,11 +180,12 @@ func GetFiltroStringContent(db *sql.DB, id int64) (string, error) {
 	defer rows.Close()
 	return filtro, nil
 }
-func GetDbbyId(id int64) string {
+func GetDbbyId(id int64) (string, int64) {
 	x := id / 1000000
+	y := id % 1000000
 	if x > 0 {
-		return "db" + strconv.FormatInt(x, 10) + "."
+		return "db" + strconv.FormatInt(x, 10) + ".", y
 	} else {
-		return ""
+		return "", y
 	}
 }
