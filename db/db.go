@@ -39,11 +39,19 @@ func GetDbFiltroString(file string) (*sql.DB, error) {
 	if !utils.FileExists(path + file) {
 		db, err := sql.Open("sqlite3", path+file)
 		if err == nil {
-			stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS filtros (filtro TEXT NOT NULL, id INTEGER NOT NULL, PRIMARY KEY (id));CREATE TABLE IF NOT EXISTS filtros2 (filtro TEXT NOT NULL, id INTEGER NOT NULL, PRIMARY KEY (id))")
+
+			stmt1, err := db.Prepare("CREATE TABLE IF NOT EXISTS filtros (filtro TEXT NOT NULL, id INTEGER NOT NULL, PRIMARY KEY (id))")
 			if err != nil {
 				return nil, err
 			}
-			stmt.Exec()
+			stmt1.Exec()
+
+			stmt2, err := db.Prepare("CREATE TABLE IF NOT EXISTS filtros2 (filtro TEXT NOT NULL, id INTEGER NOT NULL, PRIMARY KEY (id))")
+			if err != nil {
+				return nil, err
+			}
+			stmt2.Exec()
+
 			return db, nil
 		} else {
 			return nil, err
