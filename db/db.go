@@ -43,12 +43,16 @@ func GetDbFiltroString(file string) (*sql.DB, error) {
 			stmt1, err := db.Prepare("CREATE TABLE IF NOT EXISTS filtros (filtro TEXT NOT NULL, id INTEGER NOT NULL, PRIMARY KEY (id))")
 			if err != nil {
 				return nil, err
+			} else {
+				fmt.Println("DB FILTROS CREATED")
 			}
 			stmt1.Exec()
 
 			stmt2, err := db.Prepare("CREATE TABLE IF NOT EXISTS filtros2 (filtro TEXT NOT NULL, id INTEGER NOT NULL, PRIMARY KEY (id))")
 			if err != nil {
 				return nil, err
+			} else {
+				fmt.Println("DB FILTROS2 CREATED")
 			}
 			stmt2.Exec()
 
