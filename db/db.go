@@ -26,7 +26,6 @@ type Evals struct {
 	N string `json:"N"`
 }
 
-// FILTRO STRING //
 func GetDbFiltroString(file string) (*sql.DB, error) {
 
 	var path string
@@ -39,13 +38,41 @@ func GetDbFiltroString(file string) (*sql.DB, error) {
 	if !utils.FileExists(path + file) {
 		db, err := sql.Open("sqlite3", path+file)
 		if err == nil {
-			stmt1, err := db.Prepare("CREATE TABLE IF NOT EXISTS otro (filtro TEXT NOT NULL, id INTEGER NOT NULL, PRIMARY KEY (id))")
+			stmt, err := db.Prepare("create table if not exists filtros (id integer not null primary key autoincrement,filtro text)")
 			if err != nil {
 				return nil, err
-			} else {
-				fmt.Println("DB FILTROS CREATED")
 			}
-			stmt1.Exec()
+			stmt.Exec()
+			return db, nil
+		} else {
+			return nil, err
+		}
+	} else {
+		db, err := sql.Open("sqlite3", path+file)
+		if err == nil {
+			return db, nil
+		} else {
+			return nil, err
+		}
+	}
+}
+func GetDbFiltroBytes(file string) (*sql.DB, error) {
+
+	var path string
+	if runtime.GOOS == "windows" {
+		path = "C:/Allin/db/"
+	} else {
+		path = "/var/db/"
+	}
+
+	if !utils.FileExists(path + file) {
+		db, err := sql.Open("sqlite3", path+file)
+		if err == nil {
+			stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS filtros (filtro BLOB NOT NULL, id INTEGER NOT NULL, PRIMARY KEY (id))")
+			if err != nil {
+				return nil, err
+			}
+			stmt.Exec()
 			return db, nil
 		} else {
 			return nil, err
@@ -89,101 +116,6 @@ func FiltroStringInit(db *sql.DB, filtro Filtro, total int64) {
 		fmt.Println(err)
 	}
 }
-func FiltroStringInit2(db *sql.DB, filtro Filtro, total int64) {
-
-	tx, err := db.Begin()
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer tx.Rollback() // The rollback will be ignored if the tx has been committed later in the function.
-	stmt, err := tx.Prepare("INSERT INTO autocomplete (filtro) VALUES(?)")
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer stmt.Close() // Prepared statements take up server resources and should be closed after use.
-
-	now := time.Now()
-	for i := 1; i <= int(total); i++ {
-		filtro.Id = int32(i)
-		u, err := json.Marshal(filtro)
-		if err == nil {
-			if _, err := stmt.Exec(string(u)); err != nil {
-				fmt.Println(err)
-			}
-		}
-	}
-	elapsed := time.Since(now)
-	fmt.Printf("CREATE DB => TOTAL %v [%s] c/u total %v\n", total, utils.Time_cu(elapsed, int(total)), elapsed)
-
-	if err := tx.Commit(); err != nil {
-		fmt.Println(err)
-	}
-}
-func GetFiltroStringContent(db *sql.DB, id int64) (string, error) {
-
-	if id > 0 && id <= 1000000 {
-		rows, err := db.Query("SELECT filtro FROM filtros WHERE id=?", id)
-		if err != nil {
-			return "", err
-		}
-		var filtro string
-		for rows.Next() {
-			err := rows.Scan(&filtro)
-			if err != nil {
-				return "", err
-			}
-		}
-		defer rows.Close()
-		return filtro, nil
-	} else {
-		rows, err := db.Query("SELECT filtro FROM autocomplete WHERE id=?", id-1000000)
-		if err != nil {
-			return "", err
-		}
-		var filtro string
-		for rows.Next() {
-			err := rows.Scan(&filtro)
-			if err != nil {
-				return "", err
-			}
-		}
-		defer rows.Close()
-		return filtro, nil
-	}
-
-}
-
-// FILTRO BYTE //
-func GetDbFiltroBytes(file string) (*sql.DB, error) {
-
-	var path string
-	if runtime.GOOS == "windows" {
-		path = "C:/Allin/db/"
-	} else {
-		path = "/var/db/"
-	}
-
-	if !utils.FileExists(path + file) {
-		db, err := sql.Open("sqlite3", path+file)
-		if err == nil {
-			stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS filtros (filtro BLOB NOT NULL, id INTEGER NOT NULL, PRIMARY KEY (id))")
-			if err != nil {
-				return nil, err
-			}
-			stmt.Exec()
-			return db, nil
-		} else {
-			return nil, err
-		}
-	} else {
-		db, err := sql.Open("sqlite3", path+file)
-		if err == nil {
-			return db, nil
-		} else {
-			return nil, err
-		}
-	}
-}
 func FiltroBytesInit(db *sql.DB, filtro Filtro, total int64) {
 
 	tx, err := db.Begin()
@@ -224,6 +156,22 @@ func GetFiltroByteContent(db *sql.DB, id int64) ([]byte, error) {
 		err := rows.Scan(&filtro)
 		if err != nil {
 			return nil, err
+		}
+	}
+	defer rows.Close()
+	return filtro, nil
+}
+func GetFiltroStringContent(db *sql.DB, id int64) (string, error) {
+
+	rows, err := db.Query("SELECT filtro FROM filtros WHERE id=?", id)
+	if err != nil {
+		return "", err
+	}
+	var filtro string
+	for rows.Next() {
+		err := rows.Scan(&filtro)
+		if err != nil {
+			return "", err
 		}
 	}
 	defer rows.Close()
