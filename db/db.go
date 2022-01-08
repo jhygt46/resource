@@ -96,7 +96,7 @@ func FiltroStringInit2(db *sql.DB, filtro Filtro, total int64) {
 		fmt.Println(err)
 	}
 	defer tx.Rollback() // The rollback will be ignored if the tx has been committed later in the function.
-	stmt, err := tx.Prepare("INSERT INTO filtros2 (filtro) VALUES(?)")
+	stmt, err := tx.Prepare("INSERT INTO autocomplete (filtro) VALUES(?)")
 	if err != nil {
 		fmt.Println(err)
 	}
