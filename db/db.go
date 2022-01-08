@@ -136,7 +136,7 @@ func GetFiltroStringContent(db *sql.DB, id int64) (string, error) {
 		defer rows.Close()
 		return filtro, nil
 	} else {
-		rows, err := db.Query("SELECT filtro FROM filtros2 WHERE id=?", id-1000000)
+		rows, err := db.Query("SELECT filtro FROM autocomplete WHERE id=?", id-1000000)
 		if err != nil {
 			return "", err
 		}
